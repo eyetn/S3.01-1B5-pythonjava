@@ -1,5 +1,9 @@
 import csv
 
+#-------------------------------------------------------------------------------------------------------------
+# Extrude de config.txt
+#-------------------------------------------------------------------------------------------------------------
+
 """
 Lit la configuration générale de l'ordonnanceur.
 
@@ -143,3 +147,31 @@ def config_parametre(config_path: str) -> dict:
 
     return config
 
+
+
+"""
+Lit le fichier en entrer au global
+
+Fais l'association cle = valeur
+
+:param config_path: chemin d'accès vers le fichier config.txt
+:return: dictionnaire des paramètres ; la valeur est une liste si elle
+    contient plusieurs mots, une chaîne sinon
+:raises FileNotFoundError: si le fichier n'existe pas
+"""
+def config_txt(config_path: str) -> dict:
+    config = {}
+    with open(config_path, newline='\n') as csvfile:
+        spamreader = csv.reader(csvfile, delimiter='=', quotechar='\n')
+        for row in spamreader:
+            if row:
+                if row[1].split():
+                    config[row[0].strip()] = [e for e in row[1].strip().split()]
+                else:
+                    config[row[0].strip()] = row[1].strip()
+    return config
+
+
+#-------------------------------------------------------------------------------------------------------------
+# Extrude de ressources.json
+#-------------------------------------------------------------------------------------------------------------
