@@ -1,4 +1,4 @@
-from config_extrude import *
+from python.src.config_extrude import *
 import csv
 
 """
@@ -12,7 +12,8 @@ def global_info_FIFO(config_path="ressources/config.txt"):
     sorties = config_sortieFIFO(config_path)
 
     # Récupération des infos par l'exécution du programme de l'ordonnanceur
-    # exemple rows = [{"id": 1, "name": "Alice"}, {"id": 2, "name": "Bob"}]
+    # Exemple 
+    rows = [{"id": 1, "name": "Alice"}, {"id": 2, "name": "Bob2"}]
 
     with open("fichiers_sortie/" + sorties["fichier_global_FIFO"], "w", newline="", encoding="utf-8") as file:
         writer = csv.DictWriter(file, fieldnames=["id","name"]) #Idem a changer
@@ -20,3 +21,4 @@ def global_info_FIFO(config_path="ressources/config.txt"):
         writer.writerows(rows)
     
 
+global_info_FIFO()
