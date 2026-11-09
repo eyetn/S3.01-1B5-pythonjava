@@ -1,4 +1,5 @@
 import csv
+import json
 
 #-------------------------------------------------------------------------------------------------------------
 # Extrude de config.txt
@@ -173,5 +174,12 @@ def config_txt(config_path: str) -> dict:
 
 
 #-------------------------------------------------------------------------------------------------------------
-# Extrude de ressources.json
+# Extrude de .json
 #-------------------------------------------------------------------------------------------------------------
+
+def ressources_json(ressources_path: str) -> dict:
+    with open(ressources_path, 'r') as file:
+        ressources = json.load(file)
+    return ressources
+
+
