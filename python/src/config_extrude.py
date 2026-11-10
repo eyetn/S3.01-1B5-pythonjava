@@ -183,3 +183,25 @@ def ressources_json(ressources_path: str) -> dict:
     return ressources
 
 
+#-------------------------------------------------------------------------------------------------------------
+# Extrude de .csv
+#-------------------------------------------------------------------------------------------------------------
+
+def label_csv(ressources_path: str) -> list:
+    with open(ressources_path, newline="", encoding="utf-8") as f:
+        reader = csv.reader(f)
+        labels = next(reader)
+        return labels
+
+def content_csv(ressources_path: str) -> list:
+    labels = label_csv(ressources_path)
+    content = {k: [] for k in labels}
+    with open(ressources_path, newline="", encoding="utf-8") as f:
+        reader = csv.reader(f)
+        next(reader)
+        for ligne in reader:
+            for label, valeur in zip(labels, ligne):
+                content[label].append(valeur)
+    return content
+
+print(content_csv("python/ressources/energie.csv"))        
