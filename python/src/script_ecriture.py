@@ -1,6 +1,8 @@
 from python.src.config_extrude import *
 import csv
 
+DEFAULT_CONFIG_PATH = "python/ressources/config.txt"
+
 """
 identifiant du processus, la date de soumission du processus, la date
 de début d’exécution (première date à laquelle le processus a obtenu le
@@ -8,7 +10,7 @@ processeur), la date de fin d’exécution du processus, la RAM demandée et uti
 par le processus
 """
 
-def global_info_FIFO(config_path="ressources/config.txt"):
+def global_info_FIFO(config_path=DEFAULT_CONFIG_PATH):
     sorties = config_sortieFIFO(config_path)
 
     # Récupération des infos par l'exécution du programme de l'ordonnanceur
