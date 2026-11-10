@@ -115,7 +115,7 @@ def config_metrique_commun(config_path=DEFAULT_CONFIG_PATH) -> dict:
     with open(config_path, newline='\n') as csvfile:
         spamreader = csv.reader(csvfile, delimiter='=', quotechar='\n')
         for row in spamreader:
-            if row:
+            if row and row[0][0].strip() !="#":
                 match row[0].strip():
                     case "fichier_metriques":
                         config["fichier_metriques"] = row[1].strip()
@@ -135,7 +135,7 @@ def config_quantum(config_path=DEFAULT_CONFIG_PATH) -> dict:
     with open(config_path, newline='\n') as csvfile:
         spamreader = csv.reader(csvfile, delimiter='=', quotechar='\n')
         for row in spamreader:
-            if row:
+            if row and row[0][0].strip() !="#":
                 match row[0].strip():
                     case "quantum":
                         config["quantum"] = row[1].strip()
@@ -158,7 +158,7 @@ def config_txt(config_path=DEFAULT_CONFIG_PATH) -> dict:
     with open(config_path, newline='\n') as csvfile:
         spamreader = csv.reader(csvfile, delimiter='=', quotechar='\n')
         for row in spamreader:
-            if row:
+            if row and row[0][0].strip() !="#":
                 if row[1].split():
                     config[row[0].strip()] = [e for e in row[1].strip().split()]
                 else:
@@ -225,4 +225,4 @@ def content_csv(ressources_path: str) -> dict:
     return content
 
 
-print(config_metrique_commun())
+print(config_txt())
