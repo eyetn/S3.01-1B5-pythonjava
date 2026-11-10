@@ -177,6 +177,15 @@ def config_txt(config_path: str) -> dict:
 # Extrude de .json
 #-------------------------------------------------------------------------------------------------------------
 
+"""
+Lit le fichier .json en entrer 
+
+Fais l'association cle = valeur
+
+:param ressources_pathh: chemin d'accès vers le fichier .json
+:return: dictionnaire des données 
+:raises FileNotFoundError: si le fichier n'existe pas
+"""
 def ressources_json(ressources_path: str) -> dict:
     with open(ressources_path, 'r') as file:
         ressources = json.load(file)
@@ -186,14 +195,31 @@ def ressources_json(ressources_path: str) -> dict:
 #-------------------------------------------------------------------------------------------------------------
 # Extrude de .csv
 #-------------------------------------------------------------------------------------------------------------
+"""
+Fonction utilitaire pour content_csv
 
+Récupère les labels du fichiers csv
+
+:param ressources_path: chemin d'accès vers le fichier .csv
+:return: list de lables
+:raises FileNotFoundError: si le fichier n'existe pas
+"""
 def label_csv(ressources_path: str) -> list:
     with open(ressources_path, newline="", encoding="utf-8") as f:
         reader = csv.reader(f)
         labels = next(reader)
         return labels
+    
+"""
+Lit le fichier .csv en entrer
 
-def content_csv(ressources_path: str) -> list:
+Fais l'association cle(labels) = [valeur]
+
+:param ressources_path: chemin d'accès vers le fichier .csv
+:return: dict des données du csv
+:raises FileNotFoundError: si le fichier n'existe pas
+"""
+def content_csv(ressources_path: str) -> dict:
     labels = label_csv(ressources_path)
     content = {k: [] for k in labels}
     with open(ressources_path, newline="", encoding="utf-8") as f:
@@ -203,5 +229,3 @@ def content_csv(ressources_path: str) -> list:
             for label, valeur in zip(labels, ligne):
                 content[label].append(valeur)
     return content
-
-print(content_csv("python/ressources/energie.csv"))        
