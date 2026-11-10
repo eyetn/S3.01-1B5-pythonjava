@@ -4,6 +4,7 @@ import json
 #-------------------------------------------------------------------------------------------------------------
 # Extrude de config.txt
 #-------------------------------------------------------------------------------------------------------------
+DEFAULT_CONFIG_PATH = "python/ressources/config.txt"
 
 """
 Lit la configuration générale de l'ordonnanceur.
@@ -15,7 +16,7 @@ algorithmes.
 :return: dictionnaire de la configuration ; la valeur de "algorithmes" est une liste de chaînes
 :raises FileNotFoundError: si le fichier n'existe pas
 """
-def config_ordonnanceur(config_path: str) -> dict:
+def config_ordonnanceur(config_path=DEFAULT_CONFIG_PATH) -> dict:
     config = {}
     with open(config_path, newline='\n') as csvfile:
         spamreader = csv.reader(csvfile, delimiter='=', quotechar='\n')
@@ -41,7 +42,7 @@ fichier_allocations_FIFO.
 :raises FileNotFoundError: si le fichier n'existe pas
 """
 
-def config_sortieFIFO(config_path: str) -> dict:
+def config_sortieFIFO(config_path=DEFAULT_CONFIG_PATH) -> dict:
     config = {}
     with open(config_path, newline='\n') as csvfile:
         spamreader = csv.reader(csvfile, delimiter='=', quotechar='\n')
@@ -63,7 +64,7 @@ fichier_allocations_RoundRobin.
 :return: dictionnaire des chemins des fichiers de sortie Round Robin
 :raises FileNotFoundError: si le fichier n'existe pas
 """
-def config_sortieRR(config_path: str) -> dict:
+def config_sortieRR(config_path=DEFAULT_CONFIG_PATH) -> dict:
     config = {}
     with open(config_path, newline='\n') as csvfile:
         spamreader = csv.reader(csvfile, delimiter='=', quotechar='\n')
@@ -86,7 +87,7 @@ fichier_allocations_EDF.
 :return: dictionnaire des chemins des fichiers de sortie EDF
 :raises FileNotFoundError: si le fichier n'existe pas
 """
-def config_sortieEDF(config_path: str) -> dict:
+def config_sortieEDF(config_path=DEFAULT_CONFIG_PATH) -> dict:
     config = {}
     with open(config_path, newline='\n') as csvfile:
         spamreader = csv.reader(csvfile, delimiter='=', quotechar='\n')
@@ -109,7 +110,7 @@ Clé lue dans le fichier : fichier_metriques.
 :return: dictionnaire contenant le chemin du fichier de métriques
 :raises FileNotFoundError: si le fichier n'existe pas
 """
-def config_metrique_commun(config_path: str) -> dict:
+def config_metrique_commun(config_path=DEFAULT_CONFIG_PATH) -> dict:
     config = {}
     with open(config_path, newline='\n') as csvfile:
         spamreader = csv.reader(csvfile, delimiter='=', quotechar='\n')
@@ -122,30 +123,22 @@ def config_metrique_commun(config_path: str) -> dict:
 
 
 """
-Lit les paramètres de l'ordonnanceur.
-
-Dès qu'une ligne de commentaire contenant "param" est rencontrée, toutes les lignes
-suivantes (clé = valeur) sont lues comme des paramètres.
+Lit le quantum de l'ordonnanceur.
 
 :param config_path: chemin d'accès vers le fichier config.txt
 :return: dictionnaire des paramètres ; la valeur est une liste si elle
     contient plusieurs mots, une chaîne sinon
 :raises FileNotFoundError: si le fichier n'existe pas
 """
-def config_parametre(config_path: str) -> dict:
+def config_quantum(config_path=DEFAULT_CONFIG_PATH) -> dict:
     config = {}
-    passer_param = False
     with open(config_path, newline='\n') as csvfile:
         spamreader = csv.reader(csvfile, delimiter='=', quotechar='\n')
         for row in spamreader:
-            if row and "# param" in row[0].lower():
-                passer_param = True
-            if row and passer_param:
-                if row[1].split():
-                    config[row[0].strip()] = [e for e in row[1].strip().split()]
-                else:
-                    config[row[0].strip()] = row[1].strip()
-
+            if row and row[0].startswith("#"):
+                match row[0].strip():
+                    case "quantum":
+                        config["quantum"] = row[1].strip()
     return config
 
 
@@ -160,7 +153,7 @@ Fais l'association cle = valeur
     contient plusieurs mots, une chaîne sinon
 :raises FileNotFoundError: si le fichier n'existe pas
 """
-def config_txt(config_path: str) -> dict:
+def config_txt(config_path=DEFAULT_CONFIG_PATH) -> dict:
     config = {}
     with open(config_path, newline='\n') as csvfile:
         spamreader = csv.reader(csvfile, delimiter='=', quotechar='\n')
@@ -195,6 +188,7 @@ def ressources_json(ressources_path: str) -> dict:
 #-------------------------------------------------------------------------------------------------------------
 # Extrude de .csv
 #-------------------------------------------------------------------------------------------------------------
+
 """
 Fonction utilitaire pour content_csv
 
