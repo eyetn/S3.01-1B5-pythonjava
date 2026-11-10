@@ -83,17 +83,3 @@ class FIFO(Ordonnanceur):
             t = t + 1
 
         return self.allocations
-
-if __name__ == "__main__":
-    processus = [
-        {"id_processus": "P1", "date_soumission": "0", "duree_execution": "5", "ram_necessaire": "512", "priorite": "10", "date_butoir": "20"},
-        {"id_processus": "P2", "date_soumission": "1", "duree_execution": "3", "ram_necessaire": "256", "priorite": "5", "date_butoir": "15"},
-        {"id_processus": "P3", "date_soumission": "2", "duree_execution": "6", "ram_necessaire": "1024", "priorite": "7", "date_butoir": "30"},
-    ]
-    ressources = {"nbProcesseurs": 2, "ramTotale": 1024, "energieParProc": 40, "processeur": ["CPU1", "CPU2"]}
-    vals = [0,0,0,0,0,0,15,45,85,120,150,175,190,190,170,140,105,65,30,10,0,0,0,0]
-    energie = [{"instant": str(i), "energie_disponible": str(v)} for i, v in enumerate(vals)]
-
-    f = FIFO(processus, ressources, energie)
-    for alloc in f.ordonnancer():
-        print(alloc)
