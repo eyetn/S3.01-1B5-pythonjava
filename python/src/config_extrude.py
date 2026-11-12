@@ -224,5 +224,5 @@ def content_csv(ressources_path: str) -> dict:
                 content[label].append(valeur)
     return content
 
-
-print(config_txt())
+a = content_csv("python/ressources/processus.csv")
+print(a["id_processus"][0])
