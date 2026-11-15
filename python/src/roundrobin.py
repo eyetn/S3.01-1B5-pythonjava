@@ -1,3 +1,8 @@
+from config_extrude import *
+
+content_csv("python/ressources/energie.csv") 
+
+
 class Ordonnanceur:
     def __init__(self, processus, ressources, energie):
         self.processus = processus
