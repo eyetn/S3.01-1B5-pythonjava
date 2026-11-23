@@ -19,7 +19,7 @@ algorithmes.
 def config_ordonnanceur(config_path=DEFAULT_CONFIG_PATH) -> dict:
     config = {}
     with open(config_path, newline='\n') as csvfile:
-        spamreader = csv.reader(csvfile, delimiter='=', quotechar='\n')
+        spamreader = csv.reader(csvfile, delimiter='=', quoting=csv.QUOTE_NONE)
         for row in spamreader:
             if row and row[0][0].strip() !="#":
                 match row[0].strip():
@@ -27,6 +27,8 @@ def config_ordonnanceur(config_path=DEFAULT_CONFIG_PATH) -> dict:
                         config["fichier_processus"] = row[1].strip()
                     case "fichier_ressources":
                         config["fichier_ressources"] = row[1].strip()
+                    case "energie":
+                        config["energie"] = row[1].strip()
                     case "algorithmes":
                         config["algorithmes"] = [e for e in row[1].strip().split()]
     return config
@@ -45,7 +47,7 @@ fichier_allocations_FIFO.
 def config_sortieFIFO(config_path=DEFAULT_CONFIG_PATH) -> dict:
     config = {}
     with open(config_path, newline='\n') as csvfile:
-        spamreader = csv.reader(csvfile, delimiter='=', quotechar='\n')
+        spamreader = csv.reader(csvfile, delimiter='=', quoting=csv.QUOTE_NONE)
         for row in spamreader:
             if row and row[0][0].strip() !="#":
                 match row[0].strip():
@@ -67,7 +69,7 @@ fichier_allocations_RoundRobin.
 def config_sortieRR(config_path=DEFAULT_CONFIG_PATH) -> dict:
     config = {}
     with open(config_path, newline='\n') as csvfile:
-        spamreader = csv.reader(csvfile, delimiter='=', quotechar='\n')
+        spamreader = csv.reader(csvfile, delimiter='=', quoting=csv.QUOTE_NONE)
         for row in spamreader:
             if row and row[0][0].strip() !="#":
                 match row[0].strip():
@@ -90,7 +92,7 @@ fichier_allocations_EDF.
 def config_sortieEDF(config_path=DEFAULT_CONFIG_PATH) -> dict:
     config = {}
     with open(config_path, newline='\n') as csvfile:
-        spamreader = csv.reader(csvfile, delimiter='=', quotechar='\n')
+        spamreader = csv.reader(csvfile, delimiter='=', quoting=csv.QUOTE_NONE)
         for row in spamreader:
             if row and row[0][0].strip() !="#":
                 match row[0].strip():
@@ -98,6 +100,29 @@ def config_sortieEDF(config_path=DEFAULT_CONFIG_PATH) -> dict:
                         config["fichier_global_EDF"] = row[1].strip()
                     case "fichier_allocations_EDF":
                         config["fichier_allocations_EDF"] = row[1].strip()
+    return config
+
+"""
+Lit la configuration des fichiers de sortie pour Priorite.
+
+Clés lues dans le fichier : fichier_global_Priorite,
+fichier_allocations_Priorite.
+
+:param config_path: chemin d'accès vers le fichier config.txt
+:return: dictionnaire des chemins des fichiers de sortie Priorite
+:raises FileNotFoundError: si le fichier n'existe pas
+"""
+def config_sortiePriorite(config_path=DEFAULT_CONFIG_PATH) -> dict:
+    config = {}
+    with open(config_path, newline='\n') as csvfile:
+        spamreader = csv.reader(csvfile, delimiter='=', quoting=csv.QUOTE_NONE)
+        for row in spamreader:
+            if row and row[0][0].strip() !="#":
+                match row[0].strip():
+                    case "fichier_global_Priorite":
+                        config["fichier_global_Priorite"] = row[1].strip()
+                    case "fichier_allocations_Priorite":
+                        config["fichier_allocations_Priorite"] = row[1].strip()
     return config
 
 
@@ -113,7 +138,7 @@ Clé lue dans le fichier : fichier_metriques.
 def config_metrique_commun(config_path=DEFAULT_CONFIG_PATH) -> dict:
     config = {}
     with open(config_path, newline='\n') as csvfile:
-        spamreader = csv.reader(csvfile, delimiter='=', quotechar='\n')
+        spamreader = csv.reader(csvfile, delimiter='=', quoting=csv.QUOTE_NONE)
         for row in spamreader:
             if row and row[0][0].strip() !="#":
                 match row[0].strip():
@@ -133,7 +158,7 @@ Lit le quantum de l'ordonnanceur.
 def config_quantum(config_path=DEFAULT_CONFIG_PATH) -> dict:
     config = {}
     with open(config_path, newline='\n') as csvfile:
-        spamreader = csv.reader(csvfile, delimiter='=', quotechar='\n')
+        spamreader = csv.reader(csvfile, delimiter='=', quoting=csv.QUOTE_NONE)
         for row in spamreader:
             if row and row[0][0].strip() !="#":
                 match row[0].strip():
@@ -156,7 +181,7 @@ Fais l'association cle = valeur
 def config_txt(config_path=DEFAULT_CONFIG_PATH) -> dict:
     config = {}
     with open(config_path, newline='\n') as csvfile:
-        spamreader = csv.reader(csvfile, delimiter='=', quotechar='\n')
+        spamreader = csv.reader(csvfile, delimiter='=', quoting=csv.QUOTE_NONE)
         for row in spamreader:
             if row and row[0][0].strip() !="#":
                 if row[1].split():

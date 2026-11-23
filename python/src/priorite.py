@@ -1,6 +1,11 @@
 from config_extrude import *
 
 """
+@author POTTIN Tom 1B5
+"""
+
+
+"""
 Tri le dictionnaire de processus
 tri a bulle avec la priorite des processus
 
@@ -64,12 +69,11 @@ La simulation s'arrête quand tous les processus sont terminés.
 
 :return: liste de lignes [id, instant_soumission, instant_fin, processeur_final]
 """
-def ordonnanceur_priorite():
+def ordonnanceur_priorite(energies_path:str,processus_path:str,ressources_path:str):
     # Extraction des données
-    energies = content_csv("python/ressources/energie.csv") 
-    raw_processus = content_csv("python/ressources/processus.csv")
-    ressources = ressources_json("python/ressources/ressources.json")
-
+    energies = content_csv(energies_path) 
+    raw_processus = content_csv(processus_path)
+    ressources = ressources_json(ressources_path)
 
 
     # Déclaration de variables utile
@@ -88,13 +92,17 @@ def ordonnanceur_priorite():
     retour = []
 
     instant = 0
+    journer = 0
     processus_fini = {}
     processus_ex = {}
 
 
+    terminer = faisabilite(energies,processus,ram_totale,energieParProc,processeurs)
+
+
     #Boucle d'execution
     while terminer == False:
-        soumission(instant,processus_ex,processus_fini,processus,retour)
+        soumission(instant+journer,processus_ex,processus_fini,processus,retour)
         processus_ex = sort_processus(processus_ex)
 
         energie_dispo = int(energies["energie_disponible"][instant])
@@ -122,17 +130,35 @@ def ordonnanceur_priorite():
 
                     for ligne in retour:
                         if ligne[0] == id_proc:           # ligne = [id, soumission]
-                            ligne.append(instant)         # instant de fin
+                            ligne.append(instant+journer)         # instant de fin
                             ligne.append(processeurs[cpu])  # processeur qui l'a terminé
                 cpu += 1
 
         instant += 1
+        if(instant == 23):
+            instant = 0
+            journer += 24
+
         terminer = len(processus_fini) == len(processus)
 
     return retour
     
 
+def faisabilite(energies,processus,ram_totale,energieParProc,processeurs):
+    # Vérification de faisabilité avant de lancer la simulation
+    energies_dispo = [int(e) for e in energies["energie_disponible"]]
+    energie_necessaire = 0
 
+    for id_proc, (date, duree, ram, priorite, butoir) in processus.items():
+        if ram > ram_totale: # ne tiendra jamais en RAM
+            return True
+
+    if len(processeurs) == 0: # aucun processeur
+        return True
+    if max(energies_dispo) < energieParProc: # jamais assez d'énergie pour 1 CPU
+        return True
+
+    return False
 
 
 

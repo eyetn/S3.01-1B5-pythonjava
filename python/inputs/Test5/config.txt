@@ -1,0 +1,28 @@
+# Configuration de l'ordonnanceur
+fichier_processus = python/inputs/Test5/processus.csv
+fichier_ressources = python/inputs/Test5/ressources.json
+energie = python/inputs/Test5/energie.csv
+algorithmes = FIFO,RR,EFF,Priorite
+
+# Fichiers de sortie pour FIFO
+fichier_global_FIFO = python/outputs/Test5/resultats_fifo_global.csv
+fichier_allocations_FIFO = python/outputs/Test5/resultats_fifo_allocations.csv
+
+# Fichiers de sortie pour RR
+fichier_global_RoundRobin = python/outputs/Test5/resultats_roundrobin_global.csv
+fichier_allocations_RoundRobin = python/outputs/Test5/resultats_roundrobin_allocations.csv
+
+# Fichiers de sortie pour EDF
+fichier_global_EDF = python/outputs/Test5/resultats_EDF_global.csv
+fichier_allocations_EDF = python/outputs/Test5/resultats_EDF_allocations.csv
+
+
+# Fichiers de sortie pour Priorite
+fichier_global_Priorite = python/outputs/Test5/resultats_Priorite_global.csv
+fichier_allocations_Priorite = python/outputs/Test5/resultats_Priorite_allocations.csv
+
+# Fichier métriques commun
+fichier_metriques = python/outputs/Test5/metriques.csv
+
+# Paramètres
+quantum = 2
