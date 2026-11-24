@@ -42,7 +42,7 @@ def soumission(instant:int, processus_ex:dict, processus_fini:dict,processus:dic
         if instant >= processus[i][0]:
             if i not in processus_ex.keys() and i not in processus_fini.keys():
                 processus_ex[i] = processus[i].copy()
-                retour.append([i,instant])
+                retour.append([i,instant,None,processus_ex[i][2]])
 
 
 
@@ -124,7 +124,7 @@ def ordonnanceur_priorite(energies_path:str,processus_path:str,ressources_path:s
             if actifs >= nb_possible:      # plus assez d'énergie 
                 break
             processus_ex[id_proc][1] -= 1
-            retour.append([id_proc, instant + journer, en_cours[id_proc]])
+            retour.append([id_proc, instant + journer, en_cours[id_proc],processus_ex[id_proc][2]])
             actifs += 1
             if processus_ex[id_proc][1] == 0:
                 processus_fini[id_proc] = processus_ex.pop(id_proc)
@@ -143,14 +143,14 @@ def ordonnanceur_priorite(energies_path:str,processus_path:str,ressources_path:s
                 ram_dispo -= ram_proc # Aloue la RAM
                 en_cours[id_proc] = cpu_libres.pop(0) # Aloue le CPU
                 processus_ex[id_proc][1] -= 1 # Execution
-                retour.append([id_proc, instant + journer, en_cours[id_proc]]) # Ajout dans l'historique
+                retour.append([id_proc, instant + journer, en_cours[id_proc],processus_ex[id_proc][2]]) # Ajout dans l'historique
                 actifs += 1
                 if processus_ex[id_proc][1] == 0:
                     processus_fini[id_proc] = processus_ex.pop(id_proc)
                     del en_cours[id_proc]
 
         instant += 1
-        if(instant == 23):
+        if(instant == 24):
             instant = 0
             journer += 24
 
