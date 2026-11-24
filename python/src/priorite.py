@@ -18,7 +18,8 @@ def sort_processus(processus: dict) -> dict:
     for i in range(n - 1):
         echange = False
         for j in range(n - 1 - i):
-            if items[j][-2] > items[j + 1][-2]:   # compare les valeurs
+            # items[j] = (id, [date, duree, ram, priorite, butoir]) : plus grande priorité d'abord
+            if items[j][1][3] < items[j + 1][1][3]:
                 items[j], items[j + 1] = items[j + 1], items[j]
                 echange = True
         if not echange:
@@ -67,7 +68,7 @@ Déroulement à chaque instant :
 
 La simulation s'arrête quand tous les processus sont terminés.
 
-:return: liste de lignes [id, instant_soumission, instant_fin, processeur_final]
+:return: liste de lignes [id, instant, processeur]
 """
 def ordonnanceur_priorite(energies_path:str,processus_path:str,ressources_path:str):
     # Extraction des données
@@ -95,7 +96,7 @@ def ordonnanceur_priorite(energies_path:str,processus_path:str,ressources_path:s
     journer = 0
     processus_fini = {}
     processus_ex = {}
-
+    en_cours = {} 
 
     terminer = faisabilite(energies,processus,ram_totale,energieParProc,processeurs)
 
@@ -112,27 +113,41 @@ def ordonnanceur_priorite(energies_path:str,processus_path:str,ressources_path:s
         realiter = min(nb_possible, len(processeurs), len(processus_ex))
 
         #Execution
-        ram_dispo = ram_totale
-        cpu = 0
-        ids = list(processus_ex.keys())
+        ram_dispo = ram_totale - sum(processus_ex[i][2] for i in en_cours) # Somme de la ram utilisé actuelment 
+        cpu_libres = [c for c in processeurs if c not in en_cours.values()] # Récupère les CPUs non utilisé
+        actifs = 0
 
+        ids = list(en_cours)
+
+        # Boucle qui fais l'execution des processus déjà en file
         for id_proc in ids:
-            if cpu >= nb_possible:      # plus de processeur utilisable
+            if actifs >= nb_possible:      # plus assez d'énergie 
                 break
+            processus_ex[id_proc][1] -= 1
+            retour.append([id_proc, instant + journer, en_cours[id_proc]])
+            actifs += 1
+            if processus_ex[id_proc][1] == 0:
+                processus_fini[id_proc] = processus_ex.pop(id_proc)
+                del en_cours[id_proc]       # CPU et RAM libérés pour l'instant suivant
 
-            ram_proc = processus_ex[id_proc][2]
-            if ram_proc <= ram_dispo:   # le processus tient en RAM
-                ram_dispo -= ram_proc
-                processus_ex[id_proc][1] -= 1 # Décrémente le temps d'execution restant
 
-                if processus_ex[id_proc][1] == 0: # Vérifie si il est fini
-                    processus_fini[id_proc] = processus_ex.pop(id_proc) # Si oui on l'ajoute a la liste des finis
-
-                    for ligne in retour:
-                        if ligne[0] == id_proc:           # ligne = [id, soumission]
-                            ligne.append(instant+journer)         # instant de fin
-                            ligne.append(processeurs[cpu])  # processeur qui l'a terminé
-                cpu += 1
+        idp = list(processus_ex)
+        # Boucle qui regarde qui il est possible d'executer et l'execute tout en l'ajoutant dans la file
+        for id_proc in idp :
+            if actifs >= nb_possible or not cpu_libres: # Pas possible d'executer plus de processus avec les ressources actuel
+                break
+            if id_proc in en_cours: # Déjà en cours donc rien a faire execution déjà effectuer
+                continue
+            ram_proc = processus_ex[id_proc][2] 
+            if ram_proc <= ram_dispo:       # Si il y a assez de ram pour ce processus alors on le rajoute dans la file et on l'execute
+                ram_dispo -= ram_proc # Aloue la RAM
+                en_cours[id_proc] = cpu_libres.pop(0) # Aloue le CPU
+                processus_ex[id_proc][1] -= 1 # Execution
+                retour.append([id_proc, instant + journer, en_cours[id_proc]]) # Ajout dans l'historique
+                actifs += 1
+                if processus_ex[id_proc][1] == 0:
+                    processus_fini[id_proc] = processus_ex.pop(id_proc)
+                    del en_cours[id_proc]
 
         instant += 1
         if(instant == 23):
