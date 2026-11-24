@@ -1,3 +1,7 @@
+"""
+@author POTTIN Tom 1B5
+"""
+
 import csv
 import json
 

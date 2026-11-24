@@ -4,7 +4,9 @@ from config_extrude import *
 @author POTTIN Tom 1B5
 """
 
-
+#-------------------------------------------------------------------------------------------------------------
+# Fonction utilise pour l'ordonnanceur
+#-------------------------------------------------------------------------------------------------------------
 """
 Tri le dictionnaire de processus
 tri a bulle avec la priorite des processus
@@ -83,7 +85,9 @@ def faisabilite(energies,processus,ram_totale,energieParProc,processeurs):
 
 
 
-
+#-------------------------------------------------------------------------------------------------------------
+# Fonction qui execute l'ordonnanceur
+#-------------------------------------------------------------------------------------------------------------
 
 """
 Simule un ordonnanceur à priorité, sous contraintes
