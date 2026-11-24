@@ -1,4 +1,9 @@
-from python.src.config_extrude import *
+try:
+    from config_extrude import *
+except ModuleNotFoundError:
+    from python.src.config_extrude import *
+
+
 
 # un dictionnaire {cpu: None} (None = libre)
 def creer_etat(ressources):
