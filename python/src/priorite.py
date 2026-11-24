@@ -26,6 +26,8 @@ def sort_processus(processus: dict) -> dict:
             break
     return dict(items)
 
+
+
 """
 Soumet le processus dans la file d'ordonnancement
 Compare si a un instant un processus devrait être dans la file si oui on regarde si il est
@@ -43,6 +45,43 @@ def soumission(instant:int, processus_ex:dict, processus_fini:dict,processus:dic
             if i not in processus_ex.keys() and i not in processus_fini.keys():
                 processus_ex[i] = processus[i].copy()
                 retour.append([i,instant,None,processus_ex[i][2]])
+
+
+
+
+
+"""
+Vérifie avant la simulation si l'ordonnancement est impossible
+
+Détecte les cas où aucun processus ne pourra jamais s'exécuter ou terminer :
+- un processus demande plus de RAM que la RAM totale
+- aucun processeur n'est disponible
+- l'énergie disponible n'est jamais suffisante pour alimenter un processeur
+
+:param energies : dictionnaire de l'énergie disponible par instant (contenu de energie.csv)
+:param processus : dictionnaire contenant les processus {id: [soumission, durée, ram, priorité, butoir]}
+:param ram_totale : RAM totale disponible
+:param energieParProc : énergie consommée par un processeur sur un pas de temps
+:param processeurs : liste des identifiants des processeurs
+:return: True si l'ordonnancement est impossible, False s'il peut être tenté
+"""
+def faisabilite(energies,processus,ram_totale,energieParProc,processeurs):
+    # Vérification de faisabilité avant de lancer la simulation
+    energies_dispo = [int(e) for e in energies["energie_disponible"]]
+    energie_necessaire = 0
+
+    for id_proc, (date, duree, ram, priorite, butoir) in processus.items():
+        if ram > ram_totale: # ne tiendra jamais en RAM
+            return True
+
+    if len(processeurs) == 0: # aucun processeur
+        return True
+    if max(energies_dispo) < energieParProc: # jamais assez d'énergie pour 1 CPU
+        return True
+
+    return False
+
+
 
 
 
@@ -159,21 +198,6 @@ def ordonnanceur_priorite(energies_path:str,processus_path:str,ressources_path:s
     return retour
     
 
-def faisabilite(energies,processus,ram_totale,energieParProc,processeurs):
-    # Vérification de faisabilité avant de lancer la simulation
-    energies_dispo = [int(e) for e in energies["energie_disponible"]]
-    energie_necessaire = 0
-
-    for id_proc, (date, duree, ram, priorite, butoir) in processus.items():
-        if ram > ram_totale: # ne tiendra jamais en RAM
-            return True
-
-    if len(processeurs) == 0: # aucun processeur
-        return True
-    if max(energies_dispo) < energieParProc: # jamais assez d'énergie pour 1 CPU
-        return True
-
-    return False
 
 
 
