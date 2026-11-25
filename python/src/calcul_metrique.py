@@ -150,7 +150,7 @@ def calcul_energie_dispo_totale(config_path:str,retour:list):
         cpt = instant
         while continuer:
             energie_disponible_totale+=int(energies["energie_disponible"][instant])
-            if cpt == max(fin.values()-1): # Fin de l'interval
+            if cpt == max(fin.values())-1: # Fin de l'interval
                 continuer = False
             instant+=1
             if instant == 24:
