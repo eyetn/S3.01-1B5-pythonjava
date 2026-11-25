@@ -28,10 +28,6 @@ def energie(valeur=100, jusqu_a=100):
     }
 
 
-def sans_cpu(allocations):
-    return [(processus_id, debut, fin) for processus_id, debut, fin, _ in allocations]
-
-
 class TestEDF(unittest.TestCase):
 
     def test_aucun_processus(self):
@@ -48,9 +44,12 @@ class TestEDF(unittest.TestCase):
 
         allocations = ordonnancer(procs, ressources(), energie())
 
-        self.assertEqual(sans_cpu(allocations), [
-            ("P2", 0, 2),
-            ("P1", 2, 5),
+        self.assertEqual(allocations, [
+            ("P2", 0, "CPU1", 10),
+            ("P2", 1, "CPU1", 10),
+            ("P1", 2, "CPU1", 10),
+            ("P1", 3, "CPU1", 10),
+            ("P1", 4, "CPU1", 10),
         ])
 
     def test_toutes_les_dates_de_soumission_sont_respectees(self):
@@ -62,8 +61,9 @@ class TestEDF(unittest.TestCase):
         allocations = ordonnancer(procs, ressources(), energie())
 
         soumission = {"P1": 0, "P2": 5}
-        for processus_id, debut, fin, _ in allocations:
-            self.assertGreaterEqual(debut, soumission[processus_id])
+        for processus_id, instant, cpu, _ in allocations:
+            self.assertIsNotNone(cpu)
+            self.assertGreaterEqual(instant, soumission[processus_id])
 
     def test_energie_insuffisante(self):
         procs = processus([("P1", 0, 2, 10, 10)])
@@ -88,7 +88,10 @@ class TestEDF(unittest.TestCase):
             energie(),
         )
 
-        self.assertEqual(sans_cpu(allocations), [("P2", 0, 2)])
+        self.assertEqual(allocations, [
+            ("P2", 0, "CPU1", 10),
+            ("P2", 1, "CPU1", 10),
+        ])
 
     def test_echeances_a_l_arrivee(self):
         procs = processus([
@@ -102,9 +105,11 @@ class TestEDF(unittest.TestCase):
             energie(),
         )
 
-        self.assertEqual(sans_cpu(allocations), [
-            ("P1", 0, 2),
-            ("P2", 2, 4),
+        self.assertEqual(allocations, [
+            ("P1", 0, "CPU1", 10),
+            ("P1", 1, "CPU1", 10),
+            ("P2", 2, "CPU1", 10),
+            ("P2", 3, "CPU1", 10),
         ])
 
 
