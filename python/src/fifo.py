@@ -23,7 +23,7 @@ def ordonnancer(processus, ressources, energie):
                         break
                 if choisi is not None:
                     ram = demarrer(etat, file_att, processus, cpu, choisi, t, ram)
-
+        enregistrer(etat, processus, allocations, t)
         if t > derniere and len(file_att) == 0 and nb_occupes(etat) == 0:
             fini = True
         if t > 1000:    # sécurité contre la boucle infinie

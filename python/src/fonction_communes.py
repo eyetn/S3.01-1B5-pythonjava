@@ -46,6 +46,13 @@ def cpu_alimentables(dispo, t, ressources):
 def ram_ok(i, processus, ram, ressources):
     return int(processus["ram_necessaire"][i]) <= ressources["ramTotale"] - ram
 
+# ajoute une ligne (id, instant, cpu, ram) pour chaque CPU occupé à l'instant t
+def enregistrer(etat, processus, allocations, t):
+    for cpu in etat:
+        if etat[cpu] is not None:
+            i = etat[cpu][0]
+            allocations.append((processus["id_processus"][i], t, cpu, int(processus["ram_necessaire"][i])))
+
 # libère les CPU dont le processus se termine à t et renvoie la nouvelle RAM
 def liberer(etat, processus, ram, allocations, t):
     for cpu in etat:
@@ -54,8 +61,8 @@ def liberer(etat, processus, ram, allocations, t):
             debut = etat[cpu][1]
             fin = etat[cpu][2]
             if fin == t:
-                allocations.append((processus["id_processus"][i], debut, fin, cpu))
-                ram = ram - int(processus["ram_necessaire"][i])
+                ram_proc = int(processus["ram_necessaire"][i])
+                ram = ram - ram_proc
                 etat[cpu] = None
     return ram
 
