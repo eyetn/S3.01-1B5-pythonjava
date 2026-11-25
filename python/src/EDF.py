@@ -31,6 +31,8 @@ def ordonnancer(processus, ressources, energie):
                         etat, file_att, processus, cpu, choisi, t, ram
                     )
 
+        enregistrer(etat, processus, allocations, t)
+
         if t > derniere and len(file_att) == 0 and nb_occupes(etat) == 0:
             break
 
