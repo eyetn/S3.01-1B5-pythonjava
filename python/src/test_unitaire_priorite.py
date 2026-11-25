@@ -16,6 +16,7 @@ class TestPriorite(unittest.TestCase):
 
         global_info(config_sortiePriorite("python/inputs/Test1/config.txt")["fichier_global_Priorite"],retour)
         detail_info(config_sortiePriorite("python/inputs/Test1/config.txt")["fichier_allocations_Priorite"],retour)
+        metriques_global("python/inputs/Test1/config.txt", retour, "Priorite", ecrase=True)
 
         self.assertEqual(comparaison,attendu)
 
@@ -27,6 +28,8 @@ class TestPriorite(unittest.TestCase):
 
         global_info(config_sortiePriorite("python/inputs/Test2/config.txt")["fichier_global_Priorite"],retour)
         detail_info(config_sortiePriorite("python/inputs/Test2/config.txt")["fichier_allocations_Priorite"],retour)
+        metriques_global("python/inputs/Test2/config.txt", retour, "Priorite", ecrase=True)
+
         self.assertEqual(retour,attendu)
 
     def test_3_0energie(self):
@@ -37,6 +40,7 @@ class TestPriorite(unittest.TestCase):
 
         global_info(config_sortiePriorite("python/inputs/Test3/config.txt")["fichier_global_Priorite"],retour)
         detail_info(config_sortiePriorite("python/inputs/Test3/config.txt")["fichier_allocations_Priorite"],retour)
+        metriques_global("python/inputs/Test3/config.txt", retour, "Priorite", ecrase=True)
 
         self.assertEqual(retour,attendu)
 
@@ -48,6 +52,7 @@ class TestPriorite(unittest.TestCase):
 
         global_info(config_sortiePriorite("python/inputs/Test4/config.txt")["fichier_global_Priorite"],retour)
         detail_info(config_sortiePriorite("python/inputs/Test4/config.txt")["fichier_allocations_Priorite"],retour)
+        metriques_global("python/inputs/Test4/config.txt", retour, "Priorite", ecrase=True)
 
         self.assertEqual(retour,attendu)
 
@@ -59,6 +64,7 @@ class TestPriorite(unittest.TestCase):
 
         global_info(config_sortiePriorite("python/inputs/Test5/config.txt")["fichier_global_Priorite"],retour)
         detail_info(config_sortiePriorite("python/inputs/Test5/config.txt")["fichier_allocations_Priorite"],retour)
+        metriques_global("python/inputs/Test5/config.txt", retour, "Priorite", ecrase=True)
 
         self.assertEqual(retour[-1],attendu)
 

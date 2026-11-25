@@ -1,4 +1,6 @@
 import csv
+from calcul_metrique import *
+import os
 
 """
 Écrit le fichier d'informations globales des processus
@@ -26,8 +28,6 @@ def global_info(output_path: str, retour: list):
 
     lignes = []
     for id_proc, instants in executions.items():
-        if not instants:
-            continue
         lignes.append({
             "id_processus": id_proc,
             "date_soumission": soumissions[id_proc],
@@ -88,37 +88,60 @@ def detail_info(output_path: str, retour: list):
         writer.writeheader()
         writer.writerows(periodes)
 
-def metriques_global(output_path: str, retour: list):
+"""
+Écrit les métriques globales d'un ordonnancement dans le fichier de métriques commun
 
-    soumission = {id:soum for id,soum,cpu,ram in retour if cpu is None}   # Contient chaque date de soumission
-    fin = {} # Contient le dictionnaire id, instant+1 de la dernière execution
-    debut = {} # Contient le dictionnaire id, instant+1 de la première execution
-    makespan = None
+Calcule les métriques du résultat de l'ordonnancement : temps d'attente moyen,
+temps de réponse moyen, makespan, énergie consommée totale, énergie disponible
+totale et taux d'utilisation (énergie consommée / énergie disponible). Elles sont
+écrites dans le fichier indiqué par la clé fichier_metriques du config.txt, sous
+forme d'une ligne : id, type d'ordonnanceur, puis les métriques.
 
-    for id,fini,cpu,ram in reversed(retour): 
-        if id not in fin.keys() and cpu != None: # Récupère le dernier tableau contenant l'id de chaque process et donc la dernière execution
-            fin[id] = fini + 1 # + 1 car c'est l'interval et pas l'instant
+L'id s'incrémente à chaque ligne ajoutée, en partant de 0. L'en-tête n'est écrit
+que si le fichier est créé ou écrasé.
 
-    for id,deb,cpu,ram in retour: 
-            if id not in debut.keys() and cpu != None: # Récupère le premier tableau contenant l'id de chaque process et donc la première execution
-                debut[id] = deb + 1 # + 1 car c'est l'interval et pas l'instant
-        
-    temps_reponse_moyen = 0
-    temps_attente_moyen = 0
-    for k in soumission.keys(): 
-        duree = 0
-        for ligne in retour: #Calcul du temp de d'execution
-            if ligne[0] == k and ligne[2] is not None:
-                duree+=1      
+:param config_path : chemin d'accès vers le fichier config.txt
+:param retour : liste de lignes [id, instant, processeur, ram] ; processeur vaut None
+    pour une ligne de soumission
+:param type : nom de l'ordonnanceur écrit dans la 2e colonne (ex : "Priorite", "FIFO")
+:param ecrase : False (par défaut) ajoute la ligne à la fin du fichier ; True écrase
+    le fichier avec l'en-tête et la nouvelle ligne seule
+:raises FileNotFoundError: si le config.txt ou un des fichiers d'entrée n'existe pas
+"""
+def metriques_global(config_path: str, retour: list, type:str, ecrase=False ):
+    # Métriques :
+    temps_reponse_moyen = calcul_temps_reponse_moyen(retour)
+    temps_attente_moyen = calcul_temps_attente_moyen(retour)
+    makespan = calcul_makespan(retour)
+    energie_consommee_totale = calcul_energie_consommee_totale(config_path,retour)
+    energie_disponible_totale = calcul_energie_dispo_totale(config_path,retour)
+    taux_utilisation = 0
+    if(energie_disponible_totale!=0):
+        taux_utilisation = round(energie_consommee_totale/energie_disponible_totale,3)
 
-        temps_attente_moyen += (fin[k]-soumission[k])-duree # somme de tout les temps d'attente
-        temps_reponse_moyen += debut[k]-soumission[k] # somme de tout les temps de réponse
+    # Sortie 
+    config = config_txt(config_path)
+    sortie = config["fichier_metriques"][0]
 
-    temps_attente_moyen = temps_attente_moyen/len(soumission) # Division par le nombre de proc
-    temps_reponse_moyen = temps_reponse_moyen/len(soumission) 
-    makespan = max(fin.values())-min(debut.values())
+    entete = ["id", "type_ordonnanceur", "temps_attente_moyen", "temps_reponse_moyen",
+              "makespan", "energie_consommee_totale", "energie_disponible_totale",
+              "taux_utilisation"]
 
-    #energie_consommee_totale = (len(retour)-len(soumission.keys()))*energieParProc
-    #
+    # Prochain id : dernier id du fichier + 1 (0 si le fichier n'existe pas ou si on écrase)
+    prochain_id = 0
+    if not ecrase and os.path.exists(sortie):
+        with open(sortie, newline="", encoding="utf-8") as f:
+            ids = [int(l["id"]) for l in csv.DictReader(f)]
+        if ids:
+            prochain_id = max(ids) + 1
 
-    print(makespan)
+    ligne = [prochain_id, type, temps_attente_moyen,temps_reponse_moyen,
+             makespan, energie_consommee_totale, energie_disponible_totale,
+             taux_utilisation]
+
+    nouveau = ecrase or not os.path.exists(sortie) 
+    with open(sortie, "w" if ecrase else "a", newline="", encoding="utf-8") as f:
+        writer = csv.writer(f)
+        if nouveau:
+            writer.writerow(entete)             # en-tête seulement pour un fichier neuf
+        writer.writerow(ligne)
