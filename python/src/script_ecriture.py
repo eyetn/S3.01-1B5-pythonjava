@@ -26,6 +26,8 @@ def global_info(output_path: str, retour: list):
 
     lignes = []
     for id_proc, instants in executions.items():
+        if not instants:
+            continue
         lignes.append({
             "id_processus": id_proc,
             "date_soumission": soumissions[id_proc],
@@ -120,5 +122,3 @@ def metriques_global(output_path: str, retour: list):
     #
 
     print(makespan)
-
-metriques_global("",[['P1', 0, None ,512],['P3', 0, None ,512], ['P1', 7, 'CPU1', 512], ['P3', 17,'CPU1',1024]])
