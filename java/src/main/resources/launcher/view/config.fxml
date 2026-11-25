@@ -21,7 +21,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane minHeight="-Infinity" minWidth="-Infinity" prefWidth="711.0" xmlns="http://javafx.com/javafx/27.0.1.1" xmlns:fx="http://javafx.com/fxml/1">
+<BorderPane minHeight="-Infinity" minWidth="-Infinity" prefWidth="711.0" stylesheets="@../style.css" xmlns="http://javafx.com/javafx/27.0.1.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="launcher.view.MainController">
    <top>
       <TabPane prefHeight="371.0" prefWidth="711.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
         <tabs>
@@ -35,7 +35,7 @@
                            </font>
                         </Label>
                         <Separator prefWidth="200.0" />
-                        <VBox prefWidth="100.0" spacing="10.0">
+                        <VBox prefWidth="100.0" spacing="10.0" styleClass="box">
                            <children>
                               <Label text="Choix des fichiers :">
                                  <font>
@@ -57,9 +57,9 @@
                                     <Label text="fichier_processus" />
                                     <Label text="fichier_ressources" GridPane.rowIndex="1" />
                                     <Label text="energie" GridPane.rowIndex="2" />
-                                    <TextField GridPane.columnIndex="1" />
-                                    <TextField GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                    <TextField GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                    <TextField fx:id="cheminProcessus" GridPane.columnIndex="1" />
+                                    <TextField fx:id="cheminRessources" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                    <TextField fx:id="cheminEnergie" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                                     <Button mnemonicParsing="false" text="Parcourir..." GridPane.columnIndex="2" />
                                     <Button mnemonicParsing="false" text="Parcourir..." GridPane.columnIndex="2" GridPane.rowIndex="1" />
                                     <Button mnemonicParsing="false" text="Parcourir..." GridPane.columnIndex="2" GridPane.rowIndex="2" />
@@ -68,7 +68,7 @@
                            </children>
                         </VBox>
                         <Separator prefWidth="200.0" />
-                        <VBox prefWidth="100.0" spacing="10.0">
+                        <VBox prefWidth="100.0" spacing="10.0" styleClass="box">
                            <children>
                               <Label text="Choix des algorithmes :">
                                  <font>
@@ -84,7 +84,7 @@
                                     <HBox alignment="CENTER" fillHeight="false">
                                        <children>
                                           <Label text="Quantum :" />
-                                          <TextField />
+                                          <TextField fx:id="chpQuantum" />
                                        </children>
                                     </HBox>
                                  </children>
@@ -94,7 +94,7 @@
                         <Separator prefWidth="200.0" />
                         <FlowPane alignment="CENTER_RIGHT" columnHalignment="CENTER">
                            <children>
-                              <Button mnemonicParsing="false" text="Exécuter" />
+                              <Button fx:id="btnEnvoi" mnemonicParsing="false" styleClass="danger" text="Exécuter" />
                            </children>
                         </FlowPane>
                      </children>
@@ -104,7 +104,7 @@
                   </VBox>
                </content>
           </Tab>
-          <Tab text="Vue processeurs">
+          <Tab disable="true" text="Vue processeurs">
                <content>
                   <VBox prefHeight="455.0" prefWidth="711.0" spacing="10.0">
                      <children>
@@ -132,7 +132,7 @@
                   </VBox>
                </content>
           </Tab>
-            <Tab text="Vue processus">
+            <Tab disable="true" text="Vue processus">
                <content>
                   <VBox prefHeight="455.0" prefWidth="711.0" spacing="10.0">
                      <children>
