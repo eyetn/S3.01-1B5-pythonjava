@@ -1,0 +1,9 @@
+.box{
+    border-radius: 10px;
+    border-style: solid;
+    border-color: rgb(95, 112, 160);
+}
+
+.danger{
+    background-color: red
+}
