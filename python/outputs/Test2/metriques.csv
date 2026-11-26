@@ -1,2 +1,0 @@
-id,type_ordonnanceur,temps_attente_moyen,temps_reponse_moyen,makespan,energie_consommee_totale,energie_disponible_totale,taux_utilisation
-0,Priorite,7.0,7.0,3,120,265,0.453

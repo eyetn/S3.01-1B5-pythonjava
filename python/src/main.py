@@ -69,8 +69,10 @@ def main(config_path="python/ressources/config.txt"):
 
     liste = [dict(zip(processus, vals)) for vals in zip(*processus.values())]
 
-    for algo in ",".join(cfg["algorithmes"]).replace(" ", "").upper().split(","):
+    premier = True
 
+    for algo in ",".join(cfg["algorithmes"]).replace(" ", "").upper().split(","):
+        
         if algo == "FIFO":
             s = config_sortieFIFO(config_path)
             allocations = ordonnancer_fifo(processus, ressources, energies)
@@ -105,8 +107,8 @@ def main(config_path="python/ressources/config.txt"):
 
         global_info(s[f"fichier_global_{nom}"], r)
         detail_info(s[f"fichier_allocations_{nom}"], r)
-        metriques_global(config_path, r, nom)
-
+        metriques_global(config_path, r, nom,premier)
+        premier = False
 
 if __name__ == "__main__":
         inputs = os.path.join(Racine, "python", "inputs")

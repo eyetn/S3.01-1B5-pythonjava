@@ -3,3 +3,9 @@ __pycache__
 python/fichiers_sortie/*
 
 target
+
+python/outputs/Test1/*.csv
+python/outputs/Test2/*.csv
+python/outputs/Test3/*.csv
+python/outputs/Test4/*.csv
+python/outputs/Test5/*.csv

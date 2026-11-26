@@ -32,7 +32,7 @@ def calcul_temps_reponse_moyen(retour: list):
     if len(soumission) != 0:
         temps_reponse_moyen = temps_reponse_moyen/len(soumission) # Division par le nombre de proc
 
-    return temps_reponse_moyen
+    return round(temps_reponse_moyen,3)
 
 
 """
@@ -67,7 +67,7 @@ def calcul_temps_attente_moyen(retour: list):
     if len(soumission) != 0:
         temps_attente_moyen = temps_attente_moyen/len(soumission) # Division par le nombre de proc
 
-    return temps_attente_moyen
+    return round(temps_attente_moyen,3)
 
 """
 Calcule le makespan de l'ordonnancement
